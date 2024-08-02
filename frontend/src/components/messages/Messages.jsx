@@ -3,10 +3,12 @@ import useGetMessages from "../../hooks/useGetMessages";
 import MessageSkeleton from "../skeletons/MessageSkeleton";
 import Message from "./Message";
 import useConversation from "../../zustand/useConversation";
+import useListenMessages from "../../hooks/useListenMessages";
 
 const Messages = () => {
   const { messages, loading } = useGetMessages();
   const { selectedConversation } = useConversation();
+  useListenMessages();
 
   console.log("Messages ", messages);
   const lastMessageRef = useRef();
