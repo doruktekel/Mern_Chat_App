@@ -1,4 +1,18 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import useLogin from "../../hooks/useLogin";
+
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { loading, login } = useLogin();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await login(username, password);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto ">
       <div className=" p-5 h-full w-full bg-blue-200 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border border-gray-100">
@@ -6,7 +20,7 @@ const Login = () => {
           Login
           <span className="text-slate-600"> Chat App</span>
         </h1>
-        <form className="flex flex-col gap-4 mt-4">
+        <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
           <div>
             <label className="input input-bordered flex items-center gap-2">
               <svg
@@ -17,7 +31,13 @@ const Login = () => {
               >
                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
               </svg>
-              <input type="text" className="grow" placeholder="Username" />
+              <input
+                type="text"
+                className="grow"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </label>
           </div>
           <div>
@@ -34,17 +54,32 @@ const Login = () => {
                   clipRule="evenodd"
                 />
               </svg>
-              <input type="password" className="grow" value="password" />
+              <input
+                type="password"
+                className="grow"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </label>
           </div>
-          <a
-            href=""
+          <Link
+            to={"/signup"}
             className="text-gray-100 text-sm hover:underline hover:text-slate-600"
           >
             Don't have an account ?
-          </a>
+          </Link>
           <div>
-            <button className="btn btn-block mt-2 text-slate-600">Login</button>
+            <button
+              className="btn btn-block mt-2 text-slate-600"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "Login"
+              )}
+            </button>
           </div>
         </form>
       </div>

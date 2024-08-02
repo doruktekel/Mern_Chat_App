@@ -17,7 +17,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/user", userRouter);
 
-app.listen(5001, () => {
+app.listen(PORT, () => {
   connectMongoDb();
   console.log(`Server running port ${PORT}`);
 });

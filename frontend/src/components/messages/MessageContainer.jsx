@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
 import { TiMessages } from "react-icons/ti";
+import useConversation from "../../zustand/useConversation";
 
 // NoChatSelected Bileşeni Tanımı
 const NoChatSelected = () => {
@@ -18,17 +19,24 @@ const NoChatSelected = () => {
 
 // MessageContainer Bileşeni
 const MessageContainer = () => {
+  const { selectedConversation, setSelectedConversation } = useConversation();
   const NoChatSelectedState = true;
+  useEffect(() => {
+    // cleanup function (unmounts)
+    return () => setSelectedConversation(null);
+  }, [setSelectedConversation]);
 
   return (
     <div className="md:min-w-[450px] flex flex-col">
-      {!NoChatSelectedState ? (
+      {!selectedConversation ? (
         <NoChatSelected />
       ) : (
         <>
           <div className="bg-slate-500 px-4 py-2 mb-2">
             <span className="label-text">To:</span>{" "}
-            <span className="text-gray-900 font-bold">adsadsads</span>
+            <span className="text-gray-900 font-bold">
+              {selectedConversation.fullName}
+            </span>
           </div>
           <Messages />
           <MessageInput />

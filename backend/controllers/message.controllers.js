@@ -19,7 +19,7 @@ const sendMessage = async (req, res) => {
       });
     }
 
-    const newMessage = await MessageModel.create({
+    const newMessage = new MessageModel({
       senderId,
       receiverId,
       message,
@@ -29,7 +29,7 @@ const sendMessage = async (req, res) => {
       conversation.messages.push(newMessage._id);
     }
 
-    await conversation.save();
+    await Promise.all([conversation.save(), newMessage.save()]);
 
     res.status(201).json(newMessage);
   } catch (error) {
@@ -40,11 +40,11 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
   try {
-    const receiverId = req.params.id;
+    const userToChatId = req.params.id;
     const senderId = req.user._id;
 
     const conversation = await ConversationModel.findOne({
-      participants: { $all: [senderId, receiverId] },
+      participants: { $all: [senderId, userToChatId] },
     }).populate("messages");
 
     if (!conversation) {
