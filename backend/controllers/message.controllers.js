@@ -30,8 +30,14 @@ const sendMessage = async (req, res) => {
       conversation.messages.push(newMessage._id);
     }
 
+    // this will run parallel , this two things run at the same time
     await Promise.all([conversation.save(), newMessage.save()]);
 
+    // In this way we gonna wait
+    // await conversation.save();
+    // await newMessage.save();
+
+    // Socket Io Functionality
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
@@ -39,22 +45,22 @@ const sendMessage = async (req, res) => {
 
     res.status(201).json(newMessage);
   } catch (error) {
-    console.log("Error sendMessage function ");
+    console.log("Error sendMessage function ", error.message);
     res.status(500).json({ error: "Interval server error" });
   }
 };
 
 const getMessages = async (req, res) => {
   try {
-    const userToChatId = req.params.id;
+    const receiverId = req.params.id; // receiverId
     const senderId = req.user._id;
 
     const conversation = await ConversationModel.findOne({
-      participants: { $all: [senderId, userToChatId] },
-    }).populate("messages");
+      participants: { $all: [senderId, receiverId] },
+    }).populate("messages"); // not just message reference , whole message object
 
     if (!conversation) {
-      res.status(200).json([]);
+      return res.status(200).json([]);
     }
 
     const messages = conversation.messages;

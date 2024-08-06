@@ -17,6 +17,7 @@ const Message = ({ message }) => {
   const shakeClass = message.shouldShake ? "shake" : "";
 
   console.log("message", message);
+  console.log("selectedConversation", selectedConversation);
   return (
     <div className={`chat ${chatClassName}`}>
       <div className="chat-image avatar">

@@ -24,7 +24,7 @@ const useGetMessages = () => {
       }
     };
 
-    if (selectedConversation?.id) {
+    if (selectedConversation?._id) {
       getMessages();
     }
   }, [selectedConversation?._id, setMessages]);
